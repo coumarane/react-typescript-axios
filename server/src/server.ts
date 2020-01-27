@@ -5,7 +5,7 @@ import { Environment } from "./config/environment";
 class Server {
   public app: express.Application;
   // public server: http.Server;
-  public port = process.env.PORT || 5000;
+  public port = process.env.PORT || 9000;
 
   constructor() {
     this.app = express.default();

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IContact } from "../../models/contact";
 import { ContactApiService } from "../../api/ContactApiService";
+import { toast } from "react-toastify";
 
 interface IOwnProps {
   editContactId?: number;
@@ -130,19 +131,28 @@ class ContactCreation extends React.Component<IOwnProps, IOwnState> {
     })
   };
 
-  handleSubmit = (
+  handleSubmit = async (
     e: any // React.SyntheticEvent<HTMLInputElement | HTMLButtonElement>
   ) => {
     e.preventDefault();
     // console.log(`ContactCreation::handleSubmit=>contact ${JSON.stringify(contact)}`);
     const { contact } = this.state
     if (contact.id > 0) {
-      console.log(`Updated successfully...`);
+      // console.log(`${JSON.stringify(contact)}`)
+      // console.log(`Updated successfully...`);
+      toast.success(`Updated successfully...`)
+      const response= await ContactApiService.updateContact(contact)
+      console.log(`${JSON.stringify(response)}`)
     } else {
-      console.log(`added successfully...`);
+      // console.log(`${JSON.stringify(contact)}`)
+      // console.log(`added successfully...`);
+      toast.success(`Added successfully...`)
+      const response = await ContactApiService.createContact(contact)
+      console.log(`${JSON.stringify(response)}`)
+      this.handleReset();
     }
 
-    this.handleReset();
+    
   };
 
   /**
@@ -155,7 +165,13 @@ class ContactCreation extends React.Component<IOwnProps, IOwnState> {
     e.preventDefault();
 
     const target = e.target as any;
-    this.setState(contact => ({ ...contact, [target.name]: target.value }));
+
+    this.setState({
+      contact: {
+        ...this.state.contact,
+        [target.name]: target.value 
+      }
+    })
   };
 }
 
